@@ -4,13 +4,18 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+
+	"example.com/standard/pkg/recipes"
 )
 
 func main() {
 
+	store := recipes.NewMemStore()
+	recipesHandler := NewRecipesHandler(store)
+
 	http.Handle("/", &HomeHandler{})
-	http.Handle("/recipes", &RecipesHandler{})
-	http.Handle("/recipes/", &RecipesHandler{})
+	http.Handle("/recipes", recipesHandler)
+	http.Handle("/recipes/", recipesHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -22,6 +27,11 @@ func (h *HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type RecipesHandler struct {
+	store recipeStore
+}
+
+func NewRecipesHandler(store recipeStore) *RecipesHandler {
+	return &RecipesHandler{store: store}
 }
 
 func (h *RecipesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -67,4 +77,12 @@ func (h *RecipesHandler) DeleteRecipe(w http.ResponseWriter, r *http.Request) {
 
 func (h *RecipesHandler) UpdateRecipe(w http.ResponseWriter, r *http.Request) {
 
+}
+
+type recipeStore interface {
+	Add(name string, recipe recipes.Recipe) error
+	Get(name string) (recipes.Recipe, error)
+	Update(name string, recipe recipes.Recipe) error
+	List() (map[string]recipes.Recipe, error)
+	Remove(name string) error
 }
