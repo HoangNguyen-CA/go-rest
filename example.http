@@ -1,0 +1,41 @@
+POST http://localhost:8080/recipes HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Ham and cheese toasties",
+    "ingredients": [
+        {"name": "bread"},
+        {"name": "ham"},
+        {"name": "cheese"}
+    ]
+}
+
+
+###
+
+GET http://localhost:8080/recipes
+
+###
+
+GET http://localhost:8080/recipes/ham-and-cheese-toasties
+
+###
+
+PUT http://localhost:8080/recipes/ham-and-cheese-toasties HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Ham and cheese toasties",
+    "ingredients": [
+        {"name": "bread"},
+        {"name": "ham"},
+        {"name": "cheese"},
+        {"name": "butter"}
+    ]
+}
+
+###
+
+DELETE http://localhost:8080/recipes/ham-and-cheese-toasties
+
+```
